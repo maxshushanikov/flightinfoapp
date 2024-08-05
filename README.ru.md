@@ -1,4 +1,4 @@
-**[English](README.md)** ∙ [Русский язык](README.ru.md)
+**[Русский язык](README.ru.md)** ∙ [English](README.md)
 ___
 # [flightinfoapp](https://github.com/maxshushanikov/flightinfoapp)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
@@ -10,12 +10,11 @@ ___
 [![linux](https://img.shields.io/badge/Linux%20-compatible-1df31a.svg)](https://www.linux.org/)
 [![release](https://img.shields.io/badge/Version%20-1.0-FF0000.svg)](https://github.com/ZgzInfinity/Conversimg/releases)
 ___
-Implementation the console application in the java programming language that reads the tickets.json file and calculates:
+Реализация консольного приложения на языке программирования java, которое читает файл tickets.json и рассчитывает:
 
-- Minimum flight time between the cities of Vladivostok and Tel Aviv for each air carrier
-- The difference between the average price and the median for a flight between the cities of Vladivostok and Tel Aviv
+- Минимальное время полета между городами Владивосток и Тель-Авив для каждого авиаперевозчика
+- Разницу между средней ценой и медианой для полета между городами Владивосток и Тель-Авив
 
-The program is called from the Linux command line or, the results are presented in text form.
+Программа вызывается из командной строки Linux или Windows, результаты представляются в текстовом виде.
 ___
-[![Implementation](https://img.shields.io/badge/Implementation-steps-blue.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/STEPS.md)
-
+[![Этапы](https://img.shields.io/badge/Этапы-реализации-blue.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/STEPS.ru.md)
