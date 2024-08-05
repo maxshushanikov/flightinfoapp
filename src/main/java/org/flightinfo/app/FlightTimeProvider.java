@@ -23,7 +23,7 @@ public class FlightTimeProvider {
     }
 
     /**
-     * Provides map contains carrier and minimum flight time
+     * Provides map contains carrier and minimum flight time with time zone
      * @return map with carrier and minimum flight time
      */
     public Map<String, Duration> provideMinFlightTimes() {
@@ -32,6 +32,20 @@ public class FlightTimeProvider {
         for (FlightTicket ticket : this.tickets) {
             Duration flightTime = getFlightTime(ticket);
             minFlightTimes.put(ticket.getCarrier(), flightTime);
+        }
+        return minFlightTimes;
+    }
+
+    /**
+     * Provides map contains carrier and minimum flight time without time zone
+     * @return map with carrier and minimum flight time
+     */
+    public Map<String, Integer> provideMinFlightTimesWithoutTimeZone() {
+        Map<String, Integer> minFlightTimes = new HashMap<>();
+
+        for (FlightTicket ticket : this.tickets) {
+            int flightTime = getFlightTimeWithoutTimeZone(ticket);
+            minFlightTimes.put(ticket.getCarrier(), Math.min(minFlightTimes.getOrDefault(ticket.getCarrier(), Integer.MAX_VALUE), flightTime));
         }
         return minFlightTimes;
     }
@@ -77,5 +91,18 @@ public class FlightTimeProvider {
             parts[0] = "0" + parts[0];
         }
         return parts[0] + ":" + parts[1];
+    }
+
+    /**
+     *
+     * @param ticket
+     * @return
+     */
+    private int getFlightTimeWithoutTimeZone(FlightTicket ticket) {
+        String[] depParts = ticket.getDepartureTime().split(":");
+        String[] arrParts = ticket.getArrivalTime().split(":");
+        int depMinutes = Integer.parseInt(depParts[0]) * 60 + Integer.parseInt(depParts[1]);
+        int arrMinutes = Integer.parseInt(arrParts[0]) * 60 + Integer.parseInt(arrParts[1]);
+        return arrMinutes - depMinutes;
     }
 }

@@ -45,7 +45,6 @@ class AppTest {
 
         app.run(new String[]{});
 
-        verify(reportService).reportMinFlightTimes(minFlightTimes);
         verify(reportService).reportPriceDifference(priceDifference);
     }
 

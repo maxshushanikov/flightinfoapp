@@ -18,4 +18,4 @@ Implementation the console application in the java programming language that rea
 The program is called from the Linux command line or, the results are presented in text form.
 ___
 [![Implementation](https://img.shields.io/badge/Implementation-steps-blue.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/STEPS.md)
-
+[![use](https://img.shields.io/badge/How--to-use-orange.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/USAGE.md)

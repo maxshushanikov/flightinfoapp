@@ -32,6 +32,16 @@ public class FlightDataService {
     }
 
     /**
+     * Returns the minimum flight time for each carrier.
+     *
+     * @return map of minimum flight times for each carrier
+     */
+    public Map<String, Integer> getMinFlightTimesWithoutTimeZone() {
+        FlightTimeProvider provider = new FlightTimeProvider(tickets);
+        return provider.provideMinFlightTimesWithoutTimeZone();
+    }
+
+    /**
      * Returns the difference between the average and median price.
      *
      * @return difference between average and median price

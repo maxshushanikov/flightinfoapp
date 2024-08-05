@@ -18,10 +18,12 @@ public class App {
 
     public void run(String[] args) {
 
-        Map<String, Duration> minFlightTimes = infoService.getMinFlightTimes();
+        //Map<String, Duration> minFlightTimes = infoService.getMinFlightTimes();
+        Map<String, Integer> minFlightTimes = infoService.getMinFlightTimesWithoutTimeZone();
         double priceDifference = infoService.getPriceDifference();
 
-        reportService.reportMinFlightTimes(minFlightTimes);
+        //reportService.reportMinFlightTimes(minFlightTimes);
+        reportService.reportMinFlightTimesWithoutTimeZone(minFlightTimes);
         reportService.reportPriceDifference(priceDifference);
     }
 

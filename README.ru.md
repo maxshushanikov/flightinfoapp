@@ -18,3 +18,4 @@ ___
 Программа вызывается из командной строки Linux или Windows, результаты представляются в текстовом виде.
 ___
 [![Этапы](https://img.shields.io/badge/Этапы-реализации-blue.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/STEPS.ru.md)
+[![use](https://img.shields.io/badge/How-to--use-orange.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/USAGE.md)
