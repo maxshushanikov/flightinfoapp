@@ -1,6 +1,7 @@
 **[Русский язык](README.ru.md)** ∙ [English](README.md)
 ___
-# [flightinfoapp](https://github.com/maxshushanikov/flightinfoapp)
+![](/assets/images/flightinfologo.png)
+
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 [![made-with-java](https://img.shields.io/badge/Made%20with-java-brown.svg)](https://adoptium.net/de/temurin/releases/)
 [![bind-with-jackson](https://img.shields.io/badge/Bind%20with-jackson-yellow.svg)](https://github.com/FasterXML/jackson)
