@@ -2,7 +2,8 @@
 ___
 ## Implementation
 
-**To implement this application in Java, uses the Jackson library to parse the JSON file and process the data accordingly. So can structure the program to accomplish the given tasks:**
+**To implement this application in `Java`, uses the `Jackson` library to parse the JSON file and process the data accordingly.
+The program is structured as follows:**
 
 - **Read and parse the JSON file** to get the list of tickets.
 - **Calculate the minimum flight time** for each carrier between Vladivostok and Tel-Aviv.
