@@ -11,12 +11,13 @@ ___
 [![linux](https://img.shields.io/badge/Linux%20-compatible-1df31a.svg)](https://www.linux.org/)
 [![release](https://img.shields.io/badge/Version%20-1.0-FF0000.svg)](https://github.com/ZgzInfinity/Conversimg/releases)
 ___
-Implementation the console application in the java programming language that reads the tickets.json file and calculates:
+Implementation the console application in the java programming language that reads the `tickets.json` file and calculates 
+follows:
 
 - Minimum flight time between the cities of Vladivostok and Tel Aviv for each air carrier
 - The difference between the average price and the median for a flight between the cities of Vladivostok and Tel Aviv
 
-The program is called from the Linux command line or, the results are presented in text form.
+The program is called from the Linux or Windows command line, the results are presented in text form.
 ___
 [![Implementation](https://img.shields.io/badge/Implementation-steps-blue.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/STEPS.md)
 [![use](https://img.shields.io/badge/How--to-use-orange.svg)](https://github.com/maxshushanikov/flightinfoapp/blob/main/USAGE.md)

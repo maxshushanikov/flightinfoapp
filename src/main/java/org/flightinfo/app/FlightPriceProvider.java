@@ -28,7 +28,7 @@ public class FlightPriceProvider {
      * @return average price
      */
     public double calculateAveragePrice() {
-        return tickets.stream().mapToInt(FlightTicket::getPrice).average().orElse(0);
+        return this.tickets.stream().mapToInt(FlightTicket::getPrice).average().orElse(0);
     }
 
     /**
@@ -36,7 +36,7 @@ public class FlightPriceProvider {
      * @return median price
      */
     public double calculateMedianPrice() {
-        List<Integer> prices = tickets.stream().map(FlightTicket::getPrice).sorted().toList();
+        List<Integer> prices = this.tickets.stream().map(FlightTicket::getPrice).sorted().toList();
         return prices.size() % 2 == 0
                 ? (prices.get(prices.size() / 2 - 1) + prices.get(prices.size() / 2)) / 2.0
                 : prices.get(prices.size() / 2);

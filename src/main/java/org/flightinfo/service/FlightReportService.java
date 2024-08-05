@@ -1,57 +1,67 @@
 package org.flightinfo.service;
 
-import java.text.NumberFormat;
 import java.time.Duration;
-import java.util.Currency;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
- * This class displays the minimum flight time and price differences in console
+ * This class represents the minimum flight time and price differences in console
  */
 public class FlightReportService {
 
     private ResourceBundle messages;
-    private static final Logger logger = Logger.getLogger(FlightReportService.class.getName());
+    private Locale locale;
 
-    public FlightReportService(Locale locale) {
-        this.messages = ResourceBundle.getBundle("messages", locale);
+    public FlightReportService(ConfigService cfgService) {
+        this.locale = cfgService.getFlightLocal();
+        this.messages = ResourceBundle.getBundle("messages", this.locale);
     }
 
     /**
      * Outputs the minimum flight time for each carrier to the console
      */
     public void reportMinFlightTimes(Map<String, Duration> minFlightTimes) {
-        System.out.println(messages.getString("minFlightTimes"));
+        System.out.println(this.messages.getString("minFlightTimes"));
         minFlightTimes.forEach(
             (carrier, time) ->
-                System.out.println(" - " + carrier + ": " + time.toHours() + " " + messages.getString("hours") + " " +
-                            String.format("%02d", time.toMinutesPart()) + " " + messages.getString("minutes")));
+                System.out.println(" - " + carrier + ": " + time.toHours() + " " + this.messages.getString("hours")
+                + " " + String.format("%02d", time.toMinutesPart()) + " " + this.messages.getString("minutes")));
     }
 
     /**
      * Outputs the minimum flight time without time zone for each carrier to the console
      */
     public void reportMinFlightTimesWithoutTimeZone(Map<String, Integer> minFlightTimes) {
-        System.out.println(messages.getString("minFlightTimes"));
+        System.out.println(this.messages.getString("minFlightTimes"));
         minFlightTimes.forEach(
                 (carrier, time) ->
-                        System.out.println(" - " + carrier + ": " + formatTime(time)));
+                        System.out.println(" - " + carrier + ": " + getFormatedTime(time)));
     }
 
     /**
      * Outputs the difference between average and median price to the console
      */
     public void reportPriceDifference(double priceDifference) {
-        System.out.println(messages.getString("priceDifference"));
-        System.out.println(" - " + priceDifference);
+        System.out.println(this.messages.getString("priceDifference"));
+        System.out.println(" - " + getFormatedPrice(priceDifference));
     }
 
-    private String formatTime(int time){
-        Duration dur = Duration.ofMinutes(time);
-        return String.format(Locale.forLanguageTag("ru-RU"), "%d %s %02d %s", dur.toHours(),
-                messages.getString("hours"), dur.toMinutesPart(), messages.getString("minutes"));
+    /**
+     * Extracts and formats the number of minutes to represents in console
+     * @param time number of minutes
+     * @return formatted string of
+     */
+    private String getFormatedTime(int time){
+        Duration duration = Duration.ofMinutes(time);
+        return String.format(this.locale, "%d %s %02d %s", duration.toHours(),
+                this.messages.getString("hours"), duration.toMinutesPart(), this.messages.getString("minutes"));
+    }
+
+    private String getFormatedPrice(double priceDifference){
+        int majorPart = (int) priceDifference;
+        int minorPart = (int) Math.round((priceDifference - majorPart) * 100);
+        return String.format("%d %s %02d %s", majorPart, this.messages.getString("currencymajor"),
+                minorPart, this.messages.getString("currencyminor"));
     }
 }

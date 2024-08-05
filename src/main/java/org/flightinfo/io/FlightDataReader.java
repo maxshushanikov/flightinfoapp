@@ -12,8 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class reads the JSON file tickets.json into a TicketWrapper object
- * and extracts the list of tickets.
+ * This class loads tickets into a TicketWrapper object and extracts the list of tickets.
  */
 public class FlightDataReader {
 
@@ -26,20 +25,20 @@ public class FlightDataReader {
     }
 
     /**
-     * Reads the JSON file and maps it to a TicketWrapper.
+     * Loads the JSON file and maps it into a TicketWrapper.
      *
      * @return the list of tickets from the wrapper
      */
     public List<FlightTicket> loadTickets() {
         try (InputStream in = FlightDataReader.class.getResourceAsStream(this.filePath)) {
             if (in == null) {
-                logger.log(Level.SEVERE, "File not found: " + this.filePath);
+                this.logger.log(Level.SEVERE, "File not found: " + this.filePath);
                 return Collections.emptyList();
             }
-            FlightTicketWrapper wrapper = mapper.readValue(in, FlightTicketWrapper.class);
+            FlightTicketWrapper wrapper = this.mapper.readValue(in, FlightTicketWrapper.class);
             return wrapper.getTickets();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error reading tickets from file: " + this.filePath, e);
+            this.logger.log(Level.SEVERE, "Error reading tickets from file: " + this.filePath, e);
             return Collections.emptyList();
         }
     }

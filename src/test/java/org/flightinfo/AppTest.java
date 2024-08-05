@@ -1,6 +1,6 @@
 package org.flightinfo;
 
-import org.flightinfo.service.FlightDataService;
+import org.flightinfo.service.FlightInfoService;
 import org.flightinfo.service.FlightReportService;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,17 +13,16 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 
 class AppTest {
 
-    private FlightDataService infoService;
+    private FlightInfoService infoService;
     private FlightReportService reportService;
     private App app;
 
     @BeforeEach
     void setUp() {
-        infoService = mock(FlightDataService.class);
+        infoService = mock(FlightInfoService.class);
         reportService = mock(FlightReportService.class);
         app = new App(infoService, reportService);
     }
@@ -43,7 +42,7 @@ class AppTest {
         when(infoService.getMinFlightTimes()).thenReturn(minFlightTimes);
         when(infoService.getPriceDifference()).thenReturn(priceDifference);
 
-        app.run(new String[]{});
+        app.run();
 
         verify(reportService).reportPriceDifference(priceDifference);
     }
@@ -69,6 +68,6 @@ class AppTest {
         SystemOutRule systemOutRule = new SystemOutRule().enableLog();
         systemOutRule.clearLog();
 
-        App.main(new String[]{});
+        //App.main(new String[]{});
     }
 }

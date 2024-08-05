@@ -13,12 +13,12 @@ import java.util.Map;
 /**
  * This class provides flight information
  */
-public class FlightDataService {
+public class FlightInfoService {
 
     private List<FlightTicket> tickets;
 
-    public FlightDataService(String filePath) {
-        processFlightData(filePath);
+    public FlightInfoService(ConfigService cfgService) {
+        processFlightData(cfgService);
     }
 
     /**
@@ -27,7 +27,7 @@ public class FlightDataService {
      * @return map of minimum flight times for each carrier
      */
     public Map<String, Duration> getMinFlightTimes() {
-        FlightTimeProvider provider = new FlightTimeProvider(tickets);
+        FlightTimeProvider provider = new FlightTimeProvider(this.tickets);
         return provider.provideMinFlightTimes();
     }
 
@@ -37,7 +37,7 @@ public class FlightDataService {
      * @return map of minimum flight times for each carrier
      */
     public Map<String, Integer> getMinFlightTimesWithoutTimeZone() {
-        FlightTimeProvider provider = new FlightTimeProvider(tickets);
+        FlightTimeProvider provider = new FlightTimeProvider(this.tickets);
         return provider.provideMinFlightTimesWithoutTimeZone();
     }
 
@@ -54,13 +54,14 @@ public class FlightDataService {
     /**
      * Processes flight data from a JSON file.
      *
-     * @param filePath path to the file with flight data
+     * @param cfgService path to the file with flight data
      */
-    public void processFlightData(String filePath){
+    public void processFlightData(ConfigService cfgService){
+        String filePath = cfgService.getFlightFilePath();
         FlightDataReader reader = new FlightDataReader(filePath);
-        tickets = reader.loadTickets();
+        this.tickets = reader.loadTickets();
 
-        FlightDataFilter filter = new FlightDataFilter(tickets);
-        tickets = filter.getFilteredTickets();
+        FlightDataFilter filter = new FlightDataFilter(this.tickets);
+        this.tickets = filter.getFilteredTickets();
     }
 }
