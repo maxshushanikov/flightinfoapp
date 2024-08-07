@@ -17,7 +17,13 @@ public class FlightInfoService {
 
     private List<FlightTicket> tickets;
 
-    public FlightInfoService(ConfigService cfgService) {
+    /**
+     * Constructor to initialize the {@link FlightInfoService} with a configuration service.
+     * It processes the flight data based on the provided configuration.
+     *
+     * @param cfgService The configuration service.
+     */
+    public FlightInfoService(ConfigurationService cfgService) {
         processFlightData(cfgService);
     }
 
@@ -32,9 +38,9 @@ public class FlightInfoService {
     }
 
     /**
-     * Returns the minimum flight time for each carrier.
+     * Returns the minimum flight times for each carrier, without considering time zones.
      *
-     * @return map of minimum flight times for each carrier
+     * @return A map with the carrier as the key and the minimum flight time as the value.
      */
     public Map<String, Integer> getMinFlightTimesWithoutTimeZone() {
         FlightTimeProvider provider = new FlightTimeProvider(this.tickets);
@@ -52,11 +58,11 @@ public class FlightInfoService {
     }
 
     /**
-     * Processes flight data from a JSON file.
+     * Processes the flight data by loading it from a file and filtering it based on specific criteria.
      *
-     * @param cfgService path to the file with flight data
+     * @param cfgService The configuration service containing the file path of the flight data.
      */
-    public void processFlightData(ConfigService cfgService){
+    public void processFlightData(ConfigurationService cfgService){
         String filePath = cfgService.getFlightFilePath();
         FlightDataReader reader = new FlightDataReader(filePath);
         this.tickets = reader.loadTickets();

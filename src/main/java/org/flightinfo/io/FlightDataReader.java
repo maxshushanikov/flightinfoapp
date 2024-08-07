@@ -12,7 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class loads tickets into a TicketWrapper object and extracts the list of tickets.
+ * This class loads flight tickets from a JSON file into a {@link FlightTicketWrapper} object
+ * and extracts the list of flight tickets.
  */
 public class FlightDataReader {
 
@@ -20,14 +21,20 @@ public class FlightDataReader {
     private static final ObjectMapper mapper = new ObjectMapper();
     private final String filePath;
 
+    /**
+     * Constructor to initialize the FlightDataReader with the file path of the JSON file.
+     *
+     * @param filePath The file path of the JSON file.
+     */
     public FlightDataReader(String filePath) {
         this.filePath = filePath;
     }
 
     /**
-     * Loads the JSON file and maps it into a TicketWrapper.
+     * Loads the JSON file and maps it into a FlightTicketWrapper object.
+     * Extracts and returns the list of flight tickets from the wrapper.
      *
-     * @return the list of tickets from the wrapper
+     * @return The list of flight tickets from the wrapper, or an empty list if an error occurs.
      */
     public List<FlightTicket> loadTickets() {
         try (InputStream in = FlightDataReader.class.getResourceAsStream(this.filePath)) {

@@ -6,20 +6,29 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
- * This class represents the minimum flight time and price differences in console
+ * This class provides methods to generate reports for flight information,
+ * including minimum flight times and price differences.
  */
 public class FlightReportService {
 
     private ResourceBundle messages;
     private Locale locale;
 
-    public FlightReportService(ConfigService cfgService) {
-        this.locale = cfgService.getFlightLocal();
+    /**
+     * Constructor to initialize the {@link FlightReportService} with a configuration service.
+     * It sets the locale and loads the corresponding resource bundle for messages.
+     *
+     * @param cfgService The configuration service.
+     */
+    public FlightReportService(ConfigurationService cfgService) {
+        this.locale = cfgService.getFlightLocale();
         this.messages = ResourceBundle.getBundle("messages", this.locale);
     }
 
     /**
-     * Outputs the minimum flight time for each carrier to the console
+     * Reports the minimum flight times for each carrier, with time zones.
+     *
+     * @param minFlightTimes The map with the carrier as the key and the minimum flight time as the value.
      */
     public void reportMinFlightTimes(Map<String, Duration> minFlightTimes) {
         System.out.println(this.messages.getString("minFlightTimes"));
@@ -30,7 +39,9 @@ public class FlightReportService {
     }
 
     /**
-     * Outputs the minimum flight time without time zone for each carrier to the console
+     * Reports the minimum flight times for each carrier, without time zones.
+     *
+     * @param minFlightTimes The map with the carrier as the key and the minimum flight time as the value.
      */
     public void reportMinFlightTimesWithoutTimeZone(Map<String, Integer> minFlightTimes) {
         System.out.println(this.messages.getString("minFlightTimes"));
@@ -40,7 +51,9 @@ public class FlightReportService {
     }
 
     /**
-     * Outputs the difference between average and median price to the console
+     * Reports the absolute difference between the average price and the median price of the flight tickets.
+     *
+     * @param priceDifference The absolute difference between the average price and the median price.
      */
     public void reportPriceDifference(double priceDifference) {
         System.out.println(this.messages.getString("priceDifference"));
@@ -48,9 +61,10 @@ public class FlightReportService {
     }
 
     /**
-     * Extracts and formats the number of minutes to represents in console
-     * @param time number of minutes
-     * @return formatted string of
+     * Formats the flight time in hours and minutes.
+     *
+     * @param time The flight time in minutes.
+     * @return The formatted flight time as a string.
      */
     private String getFormatedTime(int time){
         Duration duration = Duration.ofMinutes(time);
@@ -58,6 +72,12 @@ public class FlightReportService {
                 this.messages.getString("hours"), duration.toMinutesPart(), this.messages.getString("minutes"));
     }
 
+    /**
+     * Formats the price difference into a string with major and minor currency units.
+     *
+     * @param priceDifference The price difference.
+     * @return The formatted price difference as a string.
+     */
     private String getFormatedPrice(double priceDifference){
         int majorPart = (int) priceDifference;
         int minorPart = (int) Math.round((priceDifference - majorPart) * 100);

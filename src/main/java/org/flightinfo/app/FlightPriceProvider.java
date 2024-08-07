@@ -5,35 +5,43 @@ import org.flightinfo.dto.FlightTicket;
 import java.util.List;
 
 /**
- * This class provides flight price
+ * This class provides methods to calculate price-related information for a list of flight tickets.
  */
 public class FlightPriceProvider {
 
     private final List<FlightTicket> tickets;
 
+    /**
+     * Constructor to initialize the {@link FlightPriceProvider} with a list of flight tickets.
+     *
+     * @param tickets The list of flight tickets.
+     */
     public FlightPriceProvider(List<FlightTicket> tickets) {
         this.tickets = tickets;
     }
 
     /**
-     * Calculates difference between price average and price median
-     * @return double value
+     * Calculates the absolute difference between the average price and the median price of the flight tickets.
+     *
+     * @return The absolute difference between the average price and the median price.
      */
     public double getPriceDifference() {
         return Math.abs(calculateAveragePrice() - calculateMedianPrice());
     }
 
     /**
-     * Calculates flight average price.
-     * @return average price
+     * Calculates the average price of the flight tickets.
+     *
+     * @return The average price of the flight tickets.
      */
     public double calculateAveragePrice() {
         return this.tickets.stream().mapToInt(FlightTicket::getPrice).average().orElse(0);
     }
 
     /**
-     * Calculates flight median price. The median price is sorted and calculated.
-     * @return median price
+     * Calculates the median price of the flight tickets.
+     *
+     * @return The median price of the flight tickets.
      */
     public double calculateMedianPrice() {
         List<Integer> prices = this.tickets.stream().map(FlightTicket::getPrice).sorted().toList();

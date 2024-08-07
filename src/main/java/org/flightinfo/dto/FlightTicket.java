@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * This class maps the ticket data from the JSON file.
+ * This class represents a flight ticket with various details such as origin, destination,
+ * departure and arrival times, carrier, number of stops and price.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FlightTicket {
