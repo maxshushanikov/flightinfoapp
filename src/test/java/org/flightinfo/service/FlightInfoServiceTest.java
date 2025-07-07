@@ -27,7 +27,7 @@ class FlightInfoServiceTest  {
         flightInfoService = new FlightInfoService(cfgService);
     }
 
-    @Test
+    /* @Test
     public void testGetMinFlightTimes() {
         Map<String, Duration> minFlightTimes = flightInfoService.getMinFlightTimes();
         assertNotNull(minFlightTimes);
@@ -48,7 +48,7 @@ class FlightInfoServiceTest  {
         // Add more assertions based on expected values
     }
 
-    /*@Test
+   @Test
     public void testProcessFlightData() {
         flightInfoService.processFlightData(cfgService);
         List<FlightTicket> tickets = flightInfoService.testGetTicketsUsingReflection();

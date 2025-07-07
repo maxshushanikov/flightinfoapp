@@ -13,9 +13,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class FlightDataReaderTest {
+class JsonFlightDataReaderTest {
 
-    private FlightDataReader flightDataReader;
+    private JsonFlightDataReader flightDataReader;
     private ObjectMapper objectMapper;
     private InputStream inputStream;
     private FlightTicketWrapper ticketWrapper;
@@ -28,7 +28,7 @@ class FlightDataReaderTest {
         objectMapper = mock(ObjectMapper.class);
         inputStream = mock(InputStream.class);
         ticketWrapper = mock(FlightTicketWrapper.class);
-        flightDataReader = new FlightDataReader("/tickets.json") {
+        flightDataReader = new JsonFlightDataReader("/tickets.json") {
             @Override
             public List<FlightTicket> loadTickets() {
                 List<FlightTicket> tickets = List.of(new FlightTicket(), new FlightTicket());
@@ -59,7 +59,7 @@ class FlightDataReaderTest {
      */
     @Test
     void testLoadTicketsIOException() {
-        flightDataReader = new FlightDataReader("/invalid.json") {
+        flightDataReader = new JsonFlightDataReader("/invalid.json") {
             @Override
             public List<FlightTicket> loadTickets() {
                 List<FlightTicket> tickets = List.of();
