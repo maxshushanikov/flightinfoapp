@@ -11,8 +11,8 @@ import java.util.ResourceBundle;
  */
 public class FlightReportService {
 
-    private ResourceBundle messages;
-    private Locale locale;
+    private final ResourceBundle messages;
+    private final Locale locale;
 
     /**
      * Constructor to initialize the {@link FlightReportService} with a configuration service.

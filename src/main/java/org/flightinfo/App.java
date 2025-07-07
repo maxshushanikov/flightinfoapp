@@ -47,16 +47,20 @@ public class App {
      * @param args The command-line arguments.
      */
     public static void main(String[] args) {
+        try {
+            // Initialize the configuration service with command-line arguments
+            ConfigurationService cfgService = new ConfigurationService(args);
 
-        // Initialize the configuration service with command-line arguments
-        ConfigurationService cfgService = new ConfigurationService(args);
+            // Initialize the flight information and report services
+            FlightInfoService infoService = new FlightInfoService(cfgService);
+            FlightReportService reportService = new FlightReportService(cfgService);
 
-        // Initialize the flight information and report services
-        FlightInfoService infoService = new FlightInfoService(cfgService);
-        FlightReportService reportService = new FlightReportService(cfgService);
-
-        // Create and run the application
-        App app = new App(infoService, reportService);
-        app.run();
+            // Create and run the application
+            App app = new App(infoService, reportService);
+            app.run();
+        }catch (Exception e) {
+            System.err.println("Application error: " + e.getMessage());
+            System.exit(1);
+        }
     }
 }

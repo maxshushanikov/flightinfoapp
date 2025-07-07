@@ -4,7 +4,7 @@ import org.flightinfo.app.FlightPriceProvider;
 import org.flightinfo.app.FlightTimeProvider;
 import org.flightinfo.dto.FlightTicket;
 import org.flightinfo.filter.FlightDataFilter;
-import org.flightinfo.io.FlightDataReader;
+import org.flightinfo.io.JsonFlightDataReader;
 
 import java.time.Duration;
 import java.util.List;
@@ -64,7 +64,7 @@ public class FlightInfoService {
      */
     public void processFlightData(ConfigurationService cfgService){
         String filePath = cfgService.getFlightFilePath();
-        FlightDataReader reader = new FlightDataReader(filePath);
+        JsonFlightDataReader reader = new JsonFlightDataReader(filePath);
         this.tickets = reader.loadTickets();
 
         FlightDataFilter filter = new FlightDataFilter(this.tickets);
