@@ -1,18 +1,7 @@
 package org.flightinfo.service;
 
-import org.flightinfo.dto.FlightTicket;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.flightinfo.service.ConfigurationService;
-import org.flightinfo.service.FlightInfoService;
 
-import java.lang.reflect.Method;
-import java.time.Duration;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class FlightInfoServiceTest  {
