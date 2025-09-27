@@ -33,7 +33,11 @@ public class FlightTimeProvider {
 
         for (FlightTicket ticket : this.tickets) {
             Duration flightTime = getFlightTime(ticket);
-            minFlightTimes.put(ticket.getCarrier(), flightTime);
+            minFlightTimes.merge(
+                    ticket.getCarrier(),
+                    flightTime,
+                    (existing, newValue) -> existing.compareTo(newValue) < 0 ? existing : newValue
+            );
         }
         return minFlightTimes;
     }
@@ -47,7 +51,12 @@ public class FlightTimeProvider {
 
         for (FlightTicket ticket : this.tickets) {
             int flightTime = getFlightTimeWithoutTimeZone(ticket);
-            minFlightTimes.put(ticket.getCarrier(), Math.min(minFlightTimes.getOrDefault(ticket.getCarrier(), Integer.MAX_VALUE), flightTime));
+
+            minFlightTimes.merge(
+                    ticket.getCarrier(),
+                    flightTime,
+                    Integer::min
+            );
         }
         return minFlightTimes;
     }
