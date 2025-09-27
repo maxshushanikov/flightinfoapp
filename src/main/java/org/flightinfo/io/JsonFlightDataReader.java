@@ -1,8 +1,8 @@
 package org.flightinfo.io;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.flightinfo.dto.FlightTicket;
-import org.flightinfo.dto.FlightTicketWrapper;
+import org.flightinfo.domain.dto.FlightTicket;
+import org.flightinfo.domain.dto.FlightTicketWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,6 +1,6 @@
 package org.flightinfo.filter;
 
-import org.flightinfo.dto.FlightTicket;
+import org.flightinfo.domain.dto.FlightTicket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package org.flightinfo.app;
 
-import org.flightinfo.dto.FlightTicket;
+import org.flightinfo.domain.dto.FlightTicket;
 
 import java.util.List;
 
