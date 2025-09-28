@@ -17,6 +17,7 @@ import java.util.Map;
 public class FlightInfoService {
 
     private List<FlightTicket> tickets;
+    private final AirportTimeZoneService timeZoneService;
 
     /**
      * Constructor to initialize the {@link FlightInfoService} with a configuration service.
@@ -24,7 +25,8 @@ public class FlightInfoService {
      *
      * @param cfgService The configuration service.
      */
-    public FlightInfoService(ConfigurationService cfgService) {
+    public FlightInfoService(ConfigurationService cfgService, AirportTimeZoneService timeZoneService) {
+        this.timeZoneService = timeZoneService;
         processFlightData(cfgService);
     }
 
@@ -34,7 +36,7 @@ public class FlightInfoService {
      * @return map of minimum flight times for each carrier
      */
     public Map<String, Duration> getMinFlightTimes() {
-        FlightTimeProvider provider = new FlightTimeProvider(this.tickets);
+        FlightTimeProvider provider = new FlightTimeProvider(this.tickets, this.timeZoneService);
         return provider.provideMinFlightTimes();
     }
 
@@ -44,7 +46,7 @@ public class FlightInfoService {
      * @return A map with the carrier as the key and the minimum flight time as the value.
      */
     public Map<String, Integer> getMinFlightTimesWithoutTimeZone() {
-        FlightTimeProvider provider = new FlightTimeProvider(this.tickets);
+        FlightTimeProvider provider = new FlightTimeProvider(this.tickets, this.timeZoneService);
         return provider.provideMinFlightTimesWithoutTimeZone();
     }
 
@@ -65,10 +67,19 @@ public class FlightInfoService {
      */
     public void processFlightData(ConfigurationService cfgService){
         String filePath = cfgService.getFlightFilePath();
-        FlightDataReader reader = new JsonFlightDataReader(filePath);
+        JsonFlightDataReader reader = new JsonFlightDataReader(filePath);
         this.tickets = reader.loadTickets();
 
         FlightDataFilter filter = new FlightDataFilter(this.tickets);
         this.tickets = filter.getFilteredTickets();
+    }
+
+    /**
+     * Returns statistics for the loaded data
+     */
+    public String getStatistics() {
+        return String.format("Tickets: %d, Airports: %d",
+                tickets.size(),
+                timeZoneService.getLoadedAirportCount());
     }
 }

@@ -1,120 +1,155 @@
 package org.flightanalyzer.app;
 
 import org.flightanalyzer.domain.dto.FlightTicket;
+import org.flightanalyzer.service.AirportTimeZoneService;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
- * This class provides methods to calculate flight times.
+ * Provider for calculating flight times across time zones
  */
 public class FlightTimeProvider {
 
-    private final List<FlightTicket> tickets;
+    private static final Logger logger = Logger.getLogger(FlightTimeProvider.class.getName());
 
-    /**
-     * Constructor to initialize the {@link FlightTimeProvider} with a list of flight tickets.
-     *
-     * @param tickets The list of flight tickets.
-     */
-    public FlightTimeProvider(List<FlightTicket> tickets) {
+    private final List<FlightTicket> tickets;
+    private final AirportTimeZoneService timeZoneService;
+    private final ZoneId defaultDepartureZone;
+    private final ZoneId defaultArrivalZone;
+
+    // Cache formatters for performance
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
+    public FlightTimeProvider(List<FlightTicket> tickets, AirportTimeZoneService timeZoneService) {
+        this(tickets, timeZoneService,
+                ZoneId.of("Asia/Vladivostok"),
+                ZoneId.of("Asia/Jerusalem"));
+    }
+
+    public FlightTimeProvider(List<FlightTicket> tickets,
+                              AirportTimeZoneService timeZoneService,
+                              ZoneId defaultDepartureZone,
+                              ZoneId defaultArrivalZone) {
         this.tickets = tickets;
+        this.timeZoneService = timeZoneService;
+        this.defaultDepartureZone = defaultDepartureZone;
+        this.defaultArrivalZone = defaultArrivalZone;
     }
 
     /**
-     * Provides map contains carrier and minimum flight time with time zone
-     * @return map with carrier and minimum flight time
+     * Provides a map with minimum flight times for each carrier
      */
     public Map<String, Duration> provideMinFlightTimes() {
         Map<String, Duration> minFlightTimes = new HashMap<>();
 
         for (FlightTicket ticket : this.tickets) {
             Duration flightTime = getFlightTime(ticket);
-            minFlightTimes.merge(
-                    ticket.getCarrier(),
-                    flightTime,
-                    (existing, newValue) -> existing.compareTo(newValue) < 0 ? existing : newValue
-            );
+            String carrier = ticket.getCarrier();
+
+            minFlightTimes.merge(carrier, flightTime,
+                    (current, newValue) -> current.compareTo(newValue) < 0 ? current : newValue);
         }
+
         return minFlightTimes;
     }
 
     /**
-     * Provides a map contains carrier and minimum flight time without time zone
-     * @return The map with the carrier as the key and the minimum flight time as the value.
+     * Provides a map with minimum flight times, ignoring time zones
      */
     public Map<String, Integer> provideMinFlightTimesWithoutTimeZone() {
         Map<String, Integer> minFlightTimes = new HashMap<>();
 
         for (FlightTicket ticket : this.tickets) {
             int flightTime = getFlightTimeWithoutTimeZone(ticket);
+            String carrier = ticket.getCarrier();
 
-            minFlightTimes.merge(
-                    ticket.getCarrier(),
-                    flightTime,
-                    Integer::min
-            );
+            minFlightTimes.merge(carrier, flightTime,
+                    Math::min);
         }
+
         return minFlightTimes;
     }
 
     /**
-     * Calculates the duration between departure and arrival time
-     * @param ticket The {@link FlightTicket} containing departure and arrival information.
-     * @return The flight time as a {@link Duration} object, not null
+     * Calculates flight duration taking into account time zones
      */
     public Duration getFlightTime(FlightTicket ticket) {
+        ZoneId departureZone = getDepartureZoneId(ticket);
+        ZoneId arrivalZone = getArrivalZoneId(ticket);
 
-        String departureTimeFormated = formatTime(ticket.getDepartureTime());
-        String arrivalTimeFormated = formatTime(ticket.getArrivalTime());
+        ZonedDateTime departureTime = getZonedDateTime(
+                ticket.getDepartureDate(),
+                formatTime(ticket.getDepartureTime()),
+                departureZone
+        );
 
-        ZonedDateTime departureTime = getZonedDateTime(ticket.getDepartureDate(), departureTimeFormated, "Asia/Vladivostok");
-        ZonedDateTime arrivalTime = getZonedDateTime(ticket.getArrivalDate(), arrivalTimeFormated, "Asia/Jerusalem");
+        ZonedDateTime arrivalTime = getZonedDateTime(
+                ticket.getArrivalDate(),
+                formatTime(ticket.getArrivalTime()),
+                arrivalZone
+        );
 
         return Duration.between(departureTime, arrivalTime);
     }
 
-    /**
-     * Creates a {@link ZonedDateTime} object from the given date, time, and time zone ID.
-     *
-     * @param date The date in the format "dd.MM.yy".
-     * @param time The time in the format "HH:mm".
-     * @param zoneId The time zone ID.
-     * @return The {@link ZonedDateTime} object.
-     */
-    public ZonedDateTime getZonedDateTime(String date, String time, String zoneId) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
-        return ZonedDateTime.of(
-                LocalDateTime.parse(date + " " + time, formatter),
-                ZoneId.of(zoneId));
+    private ZoneId getDepartureZoneId(FlightTicket ticket) {
+        return timeZoneService.getTimeZone(ticket.getOrigin())
+                .orElseGet(() -> {
+                    logger.warning("Unknown departure airport: " + ticket.getOrigin() + ", using default: " + defaultDepartureZone);
+                    return defaultDepartureZone;
+                });
+    }
+
+    private ZoneId getArrivalZoneId(FlightTicket ticket) {
+        return timeZoneService.getTimeZone(ticket.getDestination())
+                .orElseGet(() -> {
+                    logger.warning("Unknown arrival airport: " + ticket.getDestination() + ", using default: " + defaultArrivalZone);
+                    return defaultArrivalZone;
+                });
     }
 
     /**
-     * Appends a leading zero to the time string, if it is a single digit.
-     * @param time The flight time string.
-     * @return The formatted time as string
+     * Creates a ZonedDateTime from string representations of a date and time
+     */
+    public ZonedDateTime getZonedDateTime(String date, String time, ZoneId zoneId) {
+        return ZonedDateTime.of(
+                LocalDateTime.parse(date + " " + time, DATE_TIME_FORMATTER),
+                zoneId
+        );
+    }
+
+    /**
+     * Formats the time, adding leading zeros if necessary
      */
     private String formatTime(String time) {
-        String[] parts = time.split(":");
-        if (parts[0].length() == 1) {
-            parts[0] = "0" + parts[0];
+        try {
+            // Let's try standard parsing first
+            LocalTime localTime = LocalTime.parse(time, TIME_FORMATTER);
+            return localTime.format(TIME_FORMATTER);
+        } catch (DateTimeException e) {
+            // Fallback for invalid formats
+            String[] parts = time.split(":");
+            if (parts.length >= 2) {
+                String hours = parts[0].length() == 1 ? "0" + parts[0] : parts[0];
+                return hours + ":" + parts[1];
+            }
+            throw new IllegalArgumentException("Invalid time format: " + time, e);
         }
-        return parts[0] + ":" + parts[1];
     }
 
-
     /**
-     * Calculates the flight time in minutes without time zones. The result of the method
-     * is always a positive flight time, even if the flight takes several days.
-     * @param ticket {@link FlightTicket} object with departure and arrival information
-     * @return The flight time in minutes.
+     * Calculates flight time in minutes, ignoring time zones
      */
     private int getFlightTimeWithoutTimeZone(FlightTicket ticket) {
         String[] depParts = ticket.getDepartureTime().split(":");
         String[] arrParts = ticket.getArrivalTime().split(":");
+
         int depMinutes = Integer.parseInt(depParts[0]) * 60 + Integer.parseInt(depParts[1]);
         int arrMinutes = Integer.parseInt(arrParts[0]) * 60 + Integer.parseInt(arrParts[1]);
 
@@ -124,10 +159,9 @@ public class FlightTimeProvider {
         LocalDate arrDate = LocalDate.parse(ticket.getArrivalDate(), dateFormatter);
         long daysDifference = Duration.between(depDate.atStartOfDay(), arrDate.atStartOfDay()).toDays();
 
-        // Adjust the arrival minutes by adding the difference in days (in minutes)
+        // Adjusts the arrival time taking into account the difference in days
         arrMinutes += daysDifference * 24 * 60;
 
         return arrMinutes - depMinutes;
     }
-
 }

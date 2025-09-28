@@ -12,14 +12,14 @@ public class ConfigProperties {
      * The file path to the JSON file containing flight tickets.
      */
     public static final String FLIGHT_FILE_PATH = "/tickets.json";
-
-    /**
-     * The locale for English language.
-     */
     public static final Locale LOCAL_EN = Locale.of("en", "EN");
-
-    /**
-     * The locale for Russian language.
-     */
     public static final Locale LOCAL_RU = Locale.of("ru", "RU");
+
+    public static final String DEFAULT_DEPARTURE_TIMEZONE = "Asia/Vladivostok";
+    public static final String DEFAULT_ARRIVAL_TIMEZONE = "Asia/Jerusalem";
+    public static final boolean USE_AIRPORT_TIMEZONES = true;
+    public static final String TIMEZONE_SERVICE_IMPLEMENTATION = "in-memory";
+
+    public static final String AIRPORT_TIMEZONES_FILE = "/airport-timezones.properties";
+
 }

@@ -1,8 +1,10 @@
 package org.flightanalyzer;
 
+import org.flightanalyzer.service.AirportTimeZoneService;
 import org.flightanalyzer.service.ConfigurationService;
 import org.flightanalyzer.service.FlightInfoService;
 import org.flightanalyzer.service.FlightReportService;
+import org.flightanalyzer.service.factory.AirportTimeZoneServiceFactory;
 
 import java.util.Map;
 
@@ -39,6 +41,8 @@ public class App {
         // Generate reports for minimum flight times and price difference
         reportService.reportMinFlightTimesWithoutTimeZone(minFlightTimes);
         reportService.reportPriceDifference(priceDifference);
+
+        System.out.println("Statistics: " + infoService.getStatistics());
     }
 
     /**
@@ -51,8 +55,10 @@ public class App {
             // Initialize the configuration service with command-line arguments
             ConfigurationService cfgService = new ConfigurationService(args);
 
+            AirportTimeZoneService timeZoneService = AirportTimeZoneServiceFactory.createDefaultService();
+
             // Initialize the flight information and report services
-            FlightInfoService infoService = new FlightInfoService(cfgService);
+            FlightInfoService infoService = new FlightInfoService(cfgService, timeZoneService);
             FlightReportService reportService = new FlightReportService(cfgService);
 
             // Create and run the application
