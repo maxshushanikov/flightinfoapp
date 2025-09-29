@@ -31,13 +31,13 @@ test {
 }
 
 application {
-    mainClass = "org.flightinfo.App"
+    mainClass = "org.flightanalyzer.App"
 }
 
 jar {
     manifest {
         attributes(
-                "Main-Class": "org.flightinfo.App"
+                "Main-Class": "org.flightanalyzer.App"
         )
     }
     from {
